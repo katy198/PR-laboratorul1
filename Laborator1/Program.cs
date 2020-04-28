@@ -17,7 +17,7 @@ namespace Laborator1
 {
     class Program
     {
-        private static Semaphore _pool;
+        private static Semaphore semaphore;
         private static int _padding;
         public static bool ValidateServerCertificate(
             object sender, X509Certificate certificate,
@@ -31,7 +31,7 @@ namespace Laborator1
         static void Main(string[] args)
         {
 
-            _pool = new Semaphore(4, 4);
+            semaphore = new Semaphore(4, 4);
             TcpClient client = new TcpClient("81.180.74.23", 443);
 
             SslStream ssl = new SslStream(
@@ -140,7 +140,7 @@ namespace Laborator1
             }
 
             Console.WriteLine("Image Path: {0} - INITIALIZED  ", (string)name_path);
-            _pool.WaitOne();
+            semaphore.WaitOne();
             string data = (string)name_path;
             string data1=data.Replace(@"\\", "");
             string data2 = data1.Replace(@"/", "");
@@ -199,7 +199,7 @@ namespace Laborator1
                 bmp = new Bitmap(ms);
                 bmp.Save(saveLocation);
             }
-            Console.WriteLine("Image Path : {0} - UNLOADED ", (string)name_path, _pool.Release()); 
+            Console.WriteLine("Image Path : {0} - UNLOADED ", (string)name_path, semaphore.Release()); 
         }
     }
 }
